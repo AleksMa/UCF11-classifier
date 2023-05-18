@@ -4,9 +4,7 @@ from tensorflow import keras
 
 import pandas as pd
 import numpy as np
-
 import cv2
-import os
 
 train_df = pd.read_csv(TRAIN_CSV_PATH)
 test_df = pd.read_csv(TEST_CSV_PATH)
@@ -63,7 +61,7 @@ label_processor = keras.layers.StringLookup(
 )
 print(label_processor.get_vocabulary())
 
-def prepare_all_videos(df, root_dir):
+def prepare_all_videos(df):
     num_samples = len(df)
     video_paths = df["video_name"].values.tolist()
     labels = df["tag"].values
@@ -75,7 +73,7 @@ def prepare_all_videos(df, root_dir):
     )
 
     for idx, path in enumerate(video_paths):
-        frames = load_video(os.path.join(root_dir, path))
+        frames = load_video(path)
         frames = frames[None, ...]
 
         temp_frame_mask = np.zeros(shape=(1, MAX_SEQ_LENGTH,), dtype="bool")
@@ -97,8 +95,8 @@ def prepare_all_videos(df, root_dir):
     
     return (frame_features, frame_masks), labels
 
-train_data, train_labels = prepare_all_videos(train_df, "")
-test_data, test_labels = prepare_all_videos(test_df, "")
+train_data, train_labels = prepare_all_videos(train_df)
+test_data, test_labels = prepare_all_videos(test_df)
 
 print(f"train features: {train_data[0].shape}")
 print(f"train masks: {train_data[1].shape}")
@@ -163,7 +161,7 @@ def prepare_single_video(frames):
 def sequence_prediction(path):
     class_vocab = label_processor.get_vocabulary()
 
-    frames = load_video(os.path.join("", path))
+    frames = load_video(path)
     frame_features, frame_mask = prepare_single_video(frames)
     probs = sequence_model.predict([frame_features, frame_mask])[0]
 
