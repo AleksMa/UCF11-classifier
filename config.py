@@ -12,3 +12,6 @@ TRAIN_CSV_PATH = "train.csv"
 TEST_CSV_PATH = "test.csv"
 
 WEIGHTS_PATH = "tmp/video_classifier"
+
+DATASET_PATH = "UCF11_updated_mpg"
+TEST_MULTIPLIER = 5  # every TEST_MULTIPLIER'th row goes to test set, other – to train dataset
