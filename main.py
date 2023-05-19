@@ -173,4 +173,3 @@ for i in range(TEST_COUNT):
     test_video = np.random.choice(test_df["video_name"].values.tolist())
     print(f"Test video path: {test_video}")
     test_frames = sequence_prediction(test_video)
-
